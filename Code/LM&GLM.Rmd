@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+# import Fake news data sets (might need to change the location of the CSV files)
 library(readr)
 data1 <- read_csv("output_covid19_articles.csv", 
     col_types = cols(date = col_date(format = "%Y-%m-%d")))
@@ -21,6 +22,7 @@ data4 <- read_csv("output_covid19_articles_20200526.csv",
     col_types = cols(date = col_date(format = "%Y-%m-%d")))
 ```
 ```{r}
+# import Google Trend data sets (might need to change the location of the CSV files)
 google_trend <- read_csv("multiTimeline.csv", 
     skip = 2)
 
@@ -29,46 +31,30 @@ google_trend <- google_trend %>% rename(date = "Day")
 ```
 
 ```{r}
+# Join them together
 data = rbind(data1, data2, data3, data4)
-```
-
-```{r}
 data <- as.data.frame(data)
 data <- dplyr::left_join(x = data, y = google_trend, by = "date")
 ```
 
 ```{r}
+# find the average score of websites by date
 mean_score = data %>% 
   group_by(date) %>% 
   summarise(mean_score = mean(score)) %>%
   left_join(y = google_trend, by = "date")
-
-
+  
+# find the median score of websites by date
 median_score = data %>% 
   group_by(date) %>% 
   summarise(median_score = median(score)) %>%
   left_join(y = google_trend, by = "date")
 ```
 
-
 ```{r}
-library(ggplot2)
+# Findout the main publisher of these articles and group them into six categories
+# Since there are over 240000 observations, this might take a while
 
-mean_score %>% ggplot(aes(x = `covid: (Worldwide)`, y = mean_score)) + 
-  geom_point()
-```
-
-```{r}
-mean_score %>% ggplot(aes(x = date, y = mean_score)) + 
-  geom_point()
-```
-
-```{r}
-data %>% ggplot(aes(x = date, y = `covid: (Worldwide)`)) + 
-  geom_point()
-```
-
-```{r}
 library(stringr)
 len = dim(data)[1]
 site = matrix(nrow = len, ncol = 1)
@@ -259,8 +245,11 @@ data = cbind(data, site,category) %>% as.data.frame()
 
 
 ```{r}
+# These are the unique websites and the six categories
 unique(site)
+unique(category)
 ```
+
 ```{r}
 library(hrbrthemes)
 
@@ -300,7 +289,6 @@ grid()
 
 # aCCording to the diagpnistic plots
 # this model is not good enough
-
 # log transforamtion?  Since the histogram shows that the data is right skewed 
 # also zeros were included
 # random sample for less data points
@@ -322,7 +310,9 @@ grid()
 
 
 ```{r}
-# library(pscl)
+# Another model with just the max_score
+# But I prefer the fit1_modify model
+
 max_score = data %>% 
   group_by(date) %>% 
   summarise(max_score = max(score)) %>%
@@ -344,6 +334,7 @@ grid()
 ```
 
 ```{r}
+# some more visulizations used in the presentaion 
 
 data <- subset(data, select= -c(url, title))
 
@@ -369,7 +360,6 @@ bad_goof_score %>%
   ylab("Likelihood of being Reliable News Source") +
   xlab("Sites") +
   ggtitle("Top 10 most reliable and worst sources for COVID-19 related news")
-# find the 
 
 ```
 
