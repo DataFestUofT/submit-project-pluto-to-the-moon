@@ -1,0 +1,444 @@
+---
+title: "ASA2020"
+author: "Shiyi Hou (1003238212)"
+date: "6/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+data1 <- read_csv("output_covid19_articles.csv", 
+    col_types = cols(date = col_date(format = "%Y-%m-%d")))
+data2 <- read_csv("output_covid19_articles_2020-5-4.csv", 
+    col_types = cols(date = col_date(format = "%Y-%m-%d")))
+data3 <- read_csv("output_covid19_articles_20200512.csv", 
+    col_types = cols(date = col_date(format = "%Y-%m-%d")))
+data4 <- read_csv("output_covid19_articles_20200526.csv", 
+    col_types = cols(date = col_date(format = "%Y-%m-%d")))
+```
+```{r}
+google_trend <- read_csv("multiTimeline.csv", 
+    skip = 2)
+
+library(tidyverse)
+google_trend <- google_trend %>% rename(date = "Day")
+```
+
+```{r}
+data = rbind(data1, data2, data3, data4)
+```
+
+```{r}
+data <- as.data.frame(data)
+data <- dplyr::left_join(x = data, y = google_trend, by = "date")
+```
+
+```{r}
+mean_score = data %>% 
+  group_by(date) %>% 
+  summarise(mean_score = mean(score)) %>%
+  left_join(y = google_trend, by = "date")
+
+
+median_score = data %>% 
+  group_by(date) %>% 
+  summarise(median_score = median(score)) %>%
+  left_join(y = google_trend, by = "date")
+```
+
+
+```{r}
+library(ggplot2)
+
+mean_score %>% ggplot(aes(x = `covid: (Worldwide)`, y = mean_score)) + 
+  geom_point()
+```
+
+```{r}
+mean_score %>% ggplot(aes(x = date, y = mean_score)) + 
+  geom_point()
+```
+
+```{r}
+data %>% ggplot(aes(x = date, y = `covid: (Worldwide)`)) + 
+  geom_point()
+```
+
+```{r}
+library(stringr)
+len = dim(data)[1]
+site = matrix(nrow = len, ncol = 1)
+category = matrix(nrow = len, ncol = 1)
+
+for (i in 1:len){
+  site[i] = str_split(string = data$url[i], pattern = "/")[[1]][3]
+}
+
+library(sjmisc)
+for (i in 1:len){
+  if (str_contains(site[i], "cnn")){
+    site[i] = "CNN"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "nature")) {
+    site[i] = "Nature"
+    category[i] = "Science"
+  }
+  if (str_contains(site[i], "yahoo")) {
+    site[i] = "Yahoo"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "cnbc")) {
+    site[i] = "CNBC"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "express")) {
+    site[i] = "Express"
+    category[i] = "Lifestyle"
+  }
+  if (str_contains(site[i], "theguardian")) {
+   site[i] = "TheGuardian" 
+   category[i] = "News"
+  }
+  if (str_contains(site[i], "sciencemag")) {
+    site[i] = "ScienceMag"
+    category[i] = "Science"
+    
+  }
+  if (str_contains(site[i], "bbc")) {
+    site[i] = "BBC"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "reuters")) {
+    site[i] = "Reuters"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "globalbankingandfinance")){
+    site[i] = "GlobalBankingAndFinance"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "theverge")) {
+    site[i] = "TheVerge"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "sciencedaily")) {
+    site[i] = "ScienceDaily"
+    category[i] = "Science"
+  }
+  if (str_contains(site[i], "wired")) {
+    site[i] = "Wired"
+    category[i] = "Lifestyle"
+  }
+  if (str_contains(site[i], "oilprice")) {
+    site[i] = "OilPrice"
+    category[i] = "Others"
+  }
+  if (str_contains(site[i], "theatlantic")) {
+    site[i] = "TheAtlantic"
+    category[i] = "Lifestyle"
+  }
+  if (str_contains(site[i], "independent")) {
+    site[i] = "Independent"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "techcrunch")) {
+    site[i] = "techcrunch"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "venturebeat")) {
+    site[i] = "VentureBeat"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "mashable")) {
+    site[i] = "Mashable"
+    category[i] = "Others"
+  }
+  if (str_contains(site[i], "inc")) {
+    site[i] = "Inc"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "themoscowtimes")) {
+    site[i] = "TheMoscowTimes"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "globalcapital")) {
+    site[i] = "GlobalCapital"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "dzone")) {
+    site[i] = "DZone"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "finsmes")) {
+    site[i] = "Finsmes"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "proofpoint")) {
+    site[i] = "ProofPoint"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "slack-redir")) {
+    site[i] = "Slack-Redir"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "altassets")) {
+    site[i] = "Altassets"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "computerweekly")){
+    site[i] = "ComputerWeekly"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "eenewsautomotive")) {
+    site[i] = "EenewsAutomotive"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "engadget"))  {
+    site[i] = "Engadget"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "fiercebiotech")) {
+    site[i] = "FierceBiotech"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "iotworldtoday"))  {
+    site[i] = "Iotworldtoday"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "just-auto")) {
+    site[i] = "Just-Auto"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "marketbeat")) {
+    site[i] = "MarketBeat"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "marketwatch")) {
+    site[i] = "MarketWatch"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "med-technews"))  {
+    site[i] = "Med-Technews"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "medicalnewstoday")) {
+    site[i] = "MedicalNewsToday"
+    category[i] = "Science"
+  }
+  if (str_contains(site[i], "newyorker")) {
+    site[i] = "NewYorker"
+    category[i] = "News"
+  }
+  if (str_contains(site[i], "smart2zero")) {
+    site[i] = "Smart2Zero"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "outlook")) {
+    site[i] = "Outlook"
+    category[i] = "Others"
+  }
+  if (str_contains(site[i], "emerj")) {
+    site[i] = "Emerj"
+    category[i] = "Technology"
+  }
+  if (str_contains(site[i], "thefintechtimes")) {
+    site[i] = "TheFintechTimes"
+    category[i] = "Finance"
+  }
+  if (str_contains(site[i], "urldefense")) {
+    site[i] = "Urldefense"
+    category[i] = "Others"
+  }
+}
+data = cbind(data, site,category) %>% as.data.frame()
+```
+
+
+```{r}
+unique(site)
+```
+```{r}
+library(hrbrthemes)
+
+# Score distribution
+data %>%
+  ggplot(aes(x=score)) +
+  geom_histogram(color="#e9ecef", fill ="#69b3a2", alpha=0.7, bins = 20) +
+  theme_ipsum() +
+  theme(plot.title = element_text(size=11)) +
+  ggtitle("Distribution of the Fake News score of COVID-19 related articles")+
+  xlab("Score")+
+  ylab("Count")
+```
+
+```{r}
+# Visulizattion google trends distributions
+google_trend %>%
+  ggplot(aes(x = `covid: (Worldwide)`)) + 
+  geom_histogram(shape=21, color="#69b3a2", fill="#69b3a2", alpha = 0.7, bins = 10) +
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 12)) +
+  ggtitle("Distribution of Google trends search popularity score") +
+  xlab("Score") +
+  ylab("Count")
+
+```
+
+
+```{r}
+fit1 = lm(score~`covid: (Worldwide)` + category,  data = data)
+
+summary(fit1)
+
+par(mfrow=c(2,2))
+plot(fit1)
+grid()
+
+# aCCording to the diagpnistic plots
+# this model is not good enough
+
+# log transforamtion?  Since the histogram shows that the data is right skewed 
+# also zeros were included
+# random sample for less data points
+
+random_sample_data <- data[sample(nrow(data), 5000),]
+
+fit1_modify <- lm(log(score + 1) ~ `covid: (Worldwide)` + category,  data = random_sample_data)
+
+summary(fit1_modify)
+
+par(mfrow=c(2,2))
+plot(fit1_modify)
+grid()
+
+# I guess this is better
+
+```
+
+
+
+```{r}
+# library(pscl)
+max_score = data %>% 
+  group_by(date) %>% 
+  summarise(max_score = max(score)) %>%
+  left_join(y = google_trend, by = "date")
+
+
+fit2 = lm(max_score~`covid: (Worldwide)`,  data = max_score)
+par(mfrow=c(2,2))
+summary(fit2)
+plot(fit2)
+grid()
+
+# log transformation
+summary(fit2_modify <- lm(log(max_score) ~ `covid: (Worldwide)`, data = max_score))
+par(mfrow=c(2,2))
+plot(fit2_modify)
+grid()
+
+```
+
+```{r}
+
+data <- subset(data, select= -c(url, title))
+
+# changed the score to the likelihood of being reliable
+average_score_per_website <- data %>%
+  mutate(trust_score = (score - 1 ) * (-1)) %>%
+  group_by(site)%>%
+  summarise(mean_score = mean(trust_score)) %>%
+  arrange(desc(mean_score))%>%
+  mutate(site = fct_reorder(site, mean_score))
+  
+
+bad_goof_score <- rbind(head(average_score_per_website, 10), tail(average_score_per_website, 10))
+bad_goof_score <- bad_goof_score %>%
+  mutate(position = rep(c("Reliable", "Unreliable"), each = 10))
+
+bad_goof_score %>%
+  ggplot(aes(x = site, y = mean_score, fill = position)) +
+  geom_col(alpha = 0.7) +
+  coord_flip(ylim = c(0.5, 1)) + 
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 12)) +
+  ylab("Likelihood of being Reliable News Source") +
+  xlab("Sites") +
+  ggtitle("Top 10 most reliable and worst sources for COVID-19 related news")
+# find the 
+
+```
+
+```{r}
+# mean score for each cluster
+data %>%
+  na.omit %>%
+  group_by(category)%>%
+  mutate(category = fct_reorder(category, score, .fun = 'median')) %>%
+  ggplot(aes(x = reorder(category, score), y = score, fill = category)) +
+  geom_boxplot(alpha = 0.7) + 
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 12), legend.position =  'none') +
+  coord_flip()+
+  xlab("") +
+  ylab("") +
+  ggtitle("The Histograms of Fake News score for different categories")
+  
+```
+
+```{r}
+
+# data of top 5 most reliable and 5 worst coivd-19 trend and fake news scores
+data %>%
+  na.omit %>%
+  filter(score < 0.3) %>%   # remove outliers
+  group_by(category,date)%>%
+  mutate(mean_score = mean(score)) %>%
+  ggplot(aes(x = date, y = mean_score, color = category)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~category)+
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 12), legend.position = "none") +
+  ggtitle("Fake News Score Trends for different Categories of News")
+```
+
+
+
+
+```{r}
+library(readr)
+daily_deaths_covid_19 <- read_csv("daily-deaths-covid-19.csv", 
+    col_types = cols(Date = col_date(format = "%d-%b-%y")))
+
+global_daily_death_rate <- daily_deaths_covid_19 %>%
+  group_by(Date) %>%
+  summarise(Deaths = sum(Deaths))
+
+global_daily_death_rate %>%
+  ggplot(aes(x = Date, y = Deaths)) + 
+  geom_point(shape=21, color="#69b3a2", fill="#404080", size=2) +
+  geom_line(color="grey") + 
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 12)) +
+  ggtitle("Total Covid-19 Deaths per day") +
+  xlab("Date") +
+  ylab("Deaths")
+```
+```{r}
+# Visulizattion google trends
+google_trend %>%
+  ggplot(aes(x = date, y = `covid: (Worldwide)`)) + 
+  geom_point(shape=21, color="#69b3a2", fill="#69b3a2", size=2) +
+  geom_line(color="grey") + 
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 12)) +
+  ggtitle("Covid-19 Google trends search popularity per day") +
+  xlab("Date") +
+  ylab("Popularity")
+```
+

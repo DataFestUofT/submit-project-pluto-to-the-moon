@@ -1,0 +1,9 @@
+covid_tweets.csv - webscraping twitter.com
+
+non_covid_tweets.csv - webscraping twitter.com
+
+cpss-5311-E-series1_F1.csv - https://search1.odesi.ca/#/details?uri=%2Fodesi%2Fcpss-5311-E-series1.xml
+
+multiTimeline.csv - https://trends.google.com/trends/?geo=CA
+
+output_covid19_articles[*].csv - https://www.kaggle.com/jannalipenkova/covid19-public-media-dataset
