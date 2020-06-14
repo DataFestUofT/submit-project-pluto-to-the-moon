@@ -1,6 +1,6 @@
 ---
 title: "ASA2020"
-author: "Shiyi Hou (1003238212)"
+author: "Shiyi Hou (1003238212), Qiang Li (1003197239)"
 date: "6/10/2020"
 output: html_document
 ---
@@ -307,7 +307,7 @@ grid()
 
 random_sample_data <- data[sample(nrow(data), 5000),]
 
-fit1_modify <- lm(log(score + 1) ~ `covid: (Worldwide)` + category,  data = random_sample_data)
+fit1_modify <- lm(log(score + 1) ~ `covid: (Worldwide)` * category,  data = random_sample_data)
 
 summary(fit1_modify)
 
@@ -407,28 +407,6 @@ data %>%
   ggtitle("Fake News Score Trends for different Categories of News")
 ```
 
-
-
-
-```{r}
-library(readr)
-daily_deaths_covid_19 <- read_csv("daily-deaths-covid-19.csv", 
-    col_types = cols(Date = col_date(format = "%d-%b-%y")))
-
-global_daily_death_rate <- daily_deaths_covid_19 %>%
-  group_by(Date) %>%
-  summarise(Deaths = sum(Deaths))
-
-global_daily_death_rate %>%
-  ggplot(aes(x = Date, y = Deaths)) + 
-  geom_point(shape=21, color="#69b3a2", fill="#404080", size=2) +
-  geom_line(color="grey") + 
-  theme_ipsum() +
-  theme(plot.title = element_text(size = 12)) +
-  ggtitle("Total Covid-19 Deaths per day") +
-  xlab("Date") +
-  ylab("Deaths")
-```
 ```{r}
 # Visulizattion google trends
 google_trend %>%
