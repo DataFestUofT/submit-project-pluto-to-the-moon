@@ -9,4 +9,6 @@ Aliraza Nagamia - aliraza.nagamia@mail.utoronto.ca,
 A slide deck was created, and is available in these files https://github.com/DataFestUofT/submit-project-pluto-to-the-moon/blob/master/slide_deck.pdf
 
 
-A video was created, and is available in these files https://drive.google.com/file/d/1yeMJMSByYdEU_gIYD2eTtyK5BMN0gGM9/view?usp=sharing
+A video was created, and is available in these files https://github.com/DataFestUofT/submit-project-pluto-to-the-moon/blob/master/Screencast%20presentation.mp4 
+
+(or https://drive.google.com/file/d/1yeMJMSByYdEU_gIYD2eTtyK5BMN0gGM9/view?usp=sharing)
