@@ -1,5 +1,5 @@
 # Team  Pluto to the Moon: 
-Gloria Hua - shiyi.hou@mail.utoronto.ca
+Gloria Hou - shiyi.hou@mail.utoronto.ca
 Jonathan Li - ijonathan.li@mail.utoronto.ca
 Tina Yang - tinatianyu.yang@mail.utoronto.ca
 Aliraza Nagamia - aliraza.nagamia@mail.utoronto.ca
