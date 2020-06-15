@@ -1,5 +1,11 @@
-This is a sample of the `team_submission.md` that should accompany your submission.
+# Team  Pluto to the Moon: 
+Gloria Hua - shiyi.hou@mail.utoronto.ca
+Jonathan Li - ijonathan.li@mail.utoronto.ca
+Tina Yang - tinatianyu.yang@mail.utoronto.ca
+Aliraza Nagamia - aliraza.nagamia@mail.utoronto.ca
 
-A slide deck/app (select one) was created, and is available in these files XXX (add links/file names as appropriate).
 
-A video/write-up (select one) was created, and is available in these files XXX (add links/file names as appropriate).
+# Submissions: 
+A slide deck was created, and is available in these files https://github.com/DataFestUofT/submit-project-pluto-to-the-moon/blob/master/slide_deck.pdf
+
+A video was created, and is available in these files https://drive.google.com/file/d/1yeMJMSByYdEU_gIYD2eTtyK5BMN0gGM9/view?usp=sharing
